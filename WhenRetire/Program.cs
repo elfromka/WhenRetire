@@ -19,24 +19,31 @@ namespace WhenRetire
             Console.WriteLine("Homework 1");
             Console.WriteLine("Retired or not", Environment.NewLine);
 
-            Console.Write("Are you a Male(M) or Female(F)?: ");
-            string gender = Console.ReadLine();
             Gender? genderEnum;
+            bool genderOk = false;
 
-            // Checking the gender
-            if (gender == "M")
+            genderEnum = null;
+            do
             {
-                genderEnum = Gender.Male;
+                Console.Write("Are you a Male(M) or Female(F)?: ");
+                string gender = Console.ReadLine();
+
+                if (gender == "M")
+                {
+                    genderEnum = Gender.Male;
+                    genderOk = true;
+                }
+                else if (gender == "F")
+                {
+                    genderEnum = Gender.Female;
+                    genderOk = true;
+                }
+                else
+                {
+                    Console.WriteLine("You MUST enter 'M' or 'F'!");
+                }
             }
-            else if (gender == "F")
-            {
-                genderEnum = Gender.Female;
-            }
-            else
-            {
-                genderEnum = null;
-                Console.WriteLine("You MUST enter 'M' or 'F'!");
-            }
+            while (genderOk == false);
 
             Console.WriteLine("Please, enter your birthdate: ");
             Console.Write("Year: ");
@@ -51,7 +58,7 @@ namespace WhenRetire
             int birthMonth = int.Parse(stringBirthMonth);
             int birthDay = int.Parse(stringBirthDay);
             DateTime dateOfBirth = new DateTime(birthYear, birthMonth, birthDay);
-          
+
             // Calculate the age of the person
             int now = int.Parse(DateTime.Now.ToString("yyyyMMdd"));
             int dob = int.Parse(dateOfBirth.ToString("yyyyMMdd"));
