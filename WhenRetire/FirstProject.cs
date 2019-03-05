@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace WhenRetire
 {
@@ -14,72 +15,85 @@ namespace WhenRetire
 
     class FirstProject
     {
+        static DateTime ReadBirthDay()
+        {
+            Console.WriteLine("Please, enter your birthdate: ");
+            Console.Write("Year: ");
+            int birthYear = int.Parse(Console.ReadLine());
+            Console.Write("Month: ");
+            int birthMonth = int.Parse(Console.ReadLine());
+            Console.Write("Day: ");
+            int birthDay = int.Parse(Console.ReadLine());
+
+            DateTime dateOfBirth = new DateTime(birthYear, birthMonth, birthDay);
+            return dateOfBirth;
+        }
+
         public static void Run()
         {
             Gender? genderEnum;
 
             // Check if the gender is entered correctly
-            bool genderOk = false;
+            bool isGenderValid = false;
 
             genderEnum = null;
 
             do
             {
                 Console.Write("Are you a Male(M) or Female(F)?: ");
-                string gender = Console.ReadLine();
+                string gender = Console.ReadLine().Trim().ToLower();
 
-                if (gender == "M")
+                if (gender == "m")
                 {
                     genderEnum = Gender.Male;
-                    genderOk = true;
+                    isGenderValid = true;
                 }
-                else if (gender == "F")
+                else if (gender == "f")
                 {
                     genderEnum = Gender.Female;
-                    genderOk = true;
+                    isGenderValid = true;
                 }
                 else
                 {
-                    Console.WriteLine("Invalid gender, you MUST enter 'M' or 'F'!");
+                    Console.WriteLine("Invalid gender, you MUST enter 'm' or 'f'!");
                 }
             }
-            while (genderOk == false);
+            while (isGenderValid == false);
 
-            Console.WriteLine("Please, enter your birthdate: ");
-            Console.Write("Year: ");
-            string stringBirthYear = Console.ReadLine();
-            Console.Write("Month: ");
-            string stringBirthMonth = Console.ReadLine();
-            Console.Write("Day: ");
-            string stringBirthDay = Console.ReadLine();
-
-            // Converting to int
-            int birthYear = int.Parse(stringBirthYear);
-            int birthMonth = int.Parse(stringBirthMonth);
-            int birthDay = int.Parse(stringBirthDay);
-            DateTime dateOfBirth = new DateTime(birthYear, birthMonth, birthDay);
+            DateTime dateOfBirth = ReadBirthDay();
 
             // Calculate the age of the person
-            int now = int.Parse(DateTime.Now.ToString("yyyyMMdd"));
-            int dob = int.Parse(dateOfBirth.ToString("yyyyMMdd"));
-            int age = (now - dob) / 10000;
+            DateTime now = DateTime.Now;
+            TimeSpan difference = now.Subtract(dateOfBirth);
+            var age = difference.TotalDays / 365.25;
 
             // Give response depending on the age of the person
-            if ((age >= 63 && (genderEnum == Gender.Female)) || (age >= 65 && (genderEnum == Gender.Male)))
+            switch (genderEnum)
             {
-                Console.WriteLine("You are retired");
-            }
-            else if (age < 63 && (genderEnum == Gender.Female))
-            {
-                Console.WriteLine("You will retire at age 63");
-            }
-            else if (age < 65 && (genderEnum == Gender.Male))
-            {
-                Console.WriteLine("You will retire at age 65");
+                case Gender.Female:
+                    if (age < 63)
+                    {
+                        Console.WriteLine("You will retire at age 63");
+                    }
+                    else
+                    {
+                        Console.WriteLine("You are retired");
+                    }
+                    break;
+
+                case Gender.Male:
+                    if (age < 65)
+                    {
+                        Console.WriteLine("You will retire at age 65");
+                    }
+                    else
+                    {
+                        Console.WriteLine("You are retired");
+                    }
+                    break;
             }
             Console.WriteLine();
+
         }
-
     }
-
 }
